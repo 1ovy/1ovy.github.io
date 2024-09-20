@@ -3,9 +3,9 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Hexo</title>
+    <title>Lovy</title>
     <meta name="author" content="John Doe" />
-    <meta name="description" content="" />
+    <meta name="description" content="description" />
     <meta name="keywords" content="" />
     <meta
         name="viewport"
@@ -46,6 +46,14 @@
 
 <link rel="stylesheet" href="/css/main.css" />
 
+    <canvas id="fireworks" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"></canvas>
+    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+    <script src="/js/fireworks.min.js"></script>
+    <canvas id="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"></canvas>
+    <script src="/js/background.min.js"></script>
+    <div id="cursor"></div>
+    <link rel="stylesheet" href="/css/cursor.min.css">
+    <script src="/js/cursor.min.js"></script>
 <meta name="generator" content="Hexo 7.3.0"></head>
 <body>
     <div id="layout">
@@ -61,7 +69,7 @@
         <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
     <nav id="desktop-menu">
         <a class="title" href="/">
-            <span>HEXO</span>
+            <span>LOVY</span>
         </a>
         
         <a href="/">
@@ -93,7 +101,7 @@
     <nav id="mobile-menu">
         <div class="title" @click="showMenuItems = !showMenuItems">
             <i class="fa-solid fa-bars fa-fw"></i>
-            <span>&emsp;HEXO</span>
+            <span>&emsp;LOVY</span>
         </div>
         <transition name="slide">
             <div class="items" v-show="showMenuItems">
@@ -165,9 +173,9 @@
         <span class="loop"></span>
         <span class="info">
             <div class="wrap">
-                <h1>Hexo</h1>
-                <h3></h3>
-                <h5></h5>
+                <h1>Lovy</h1>
+                <h3>须知少年凌云志，曾许人间第一流</h3>
+                <h5>description</h5>
             </div>
         </span>
     </div>
@@ -243,7 +251,7 @@
         </div>
         <div class="name">John Doe</div>
         <div class="description">
-            <p>Description<br>…</p>
+            <p>仰天大笑出门去，我辈岂是蓬蒿人<br>…</p>
 
         </div>
         
@@ -251,7 +259,7 @@
         <div class="friend-links">
             
             <div class="friend-link">
-                <a target="_blank" rel="noopener" href="https://argvchs.github.io">Argvchs</a>
+                <a target="_blank" rel="noopener" href="https://lovy.github.io">lovy</a>
             </div>
             
         </div>
@@ -267,7 +275,7 @@
     <div id="footer-wrap">
         <div>
             &copy;
-            2022 - 2024 Hexo
+            2022 - 2024 Lovy
             <span id="footer-icon">
                 <i class="fa-solid fa-font-awesome fa-fw"></i>
             </span>
