@@ -179,7 +179,72 @@
     </div>
     
     <div class="content" v-pre>
-        <h2 id=""><a href="#" class="headerlink" title=""></a><span id="more"></span></h2><h1 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h1><h2 id="SQL注入介绍"><a href="#SQL注入介绍" class="headerlink" title="SQL注入介绍"></a>SQL注入介绍</h2><p>SQL 注入（SQL Injection）是发生在 Web 程序中数据库层的安全漏洞，是网站存在最多也是最简单的漏洞。主要原因是程序对用户输入数据的合法性没有判断和处理，导致攻击者可以在 Web 应用程序中事先定义好的 SQL 语句中添加额外的 SQL 语句，在管理员不知情的情况下实现非法操作，以此来实现欺骗数据库服务器执行非授权的任意查询，从而进一步获取到数据信息。</p>
+        <h2 id=""><a href="#" class="headerlink" title=""></a><span id="more"></span></h2><!-- TOC -->
+<ul>
+<li><a href="#SQL%E6%B3%A8%E5%85%A5%E4%BB%8B%E7%BB%8D">SQL注入介绍</a><ul>
+<li><a href="#SQL%E6%B3%A8%E5%85%A5%E5%8E%9F%E7%90%86">SQL注入原理</a> </li>
+<li><a href="#MySQL%E6%B3%A8%E5%85%A5">MySQL注入</a>  </li>
+<li><a href="#MySQL%E6%95%B0%E6%8D%AE%E5%BA%93">MySQL数据库</a>  </li>
+<li><a href="#%E5%B8%B8%E7%94%A8mysql%E5%87%BD%E6%95%B0">常用mysql函数</a><br>-<a href="#MySqL%E8%81%94%E5%90%88%E6%9F%A5%E8%AF%A2%E6%B3%A8%E5%85%A5%E6%AD%A5%E9%AA%A4">MySqL联合查询注入步骤</a>  </li>
+<li><a href="#%E5%88%A4%E6%96%AD%E6%B3%A8%E5%85%A5%E7%82%B9">判断注入点</a>  </li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E5%9E%8B%E6%B3%A8%E5%85%A5">字符型注入</a></li>
+<li><a href="#%E6%95%B0%E5%AD%97%E5%9E%8B%E6%B3%A8%E5%85%A5">数字型注入</a></li>
+<li><a href="#%E5%88%A4%E6%96%AD%E6%B3%A8%E5%85%A5%E5%AD%97%E6%AE%B5%E6%95%B0">判断注入字段数</a></li>
+<li><a href="#%E4%BF%A1%E6%81%AF%E6%94%B6%E9%9B%86">信息收集</a></li>
+<li><a href="#%E6%9F%A5%E8%AF%A2">查询</a></li>
+</ul>
+</li>
+<li><a href="#%E9%AB%98%E6%9D%83%E9%99%90%E6%B3%A8%E5%85%A5%E8%B7%A8%E5%BA%93%E6%9F%A5%E8%AF%A2">高权限注入跨库查询</a><ul>
+<li><a href="#%E8%B7%A8%E7%AB%99%E6%9F%A5%E8%AF%A2%E7%9A%84%E6%80%9D%E8%B7%AF">跨站查询的思路</a></li>
+<li><a href="#%E8%8E%B7%E5%BE%97%E6%89%80%E6%9C%89%E6%95%B0%E6%8D%AE%E5%BA%93%E5%90%8D">获得所有数据库名</a></li>
+<li><a href="#%E8%8E%B7%E5%8F%96pikachu%E6%95%B0%E6%8D%AE%E5%BA%93%E4%B8%ADusers%E6%95%B0%E6%8D%AE%E8%A1%A8%E7%9A%84%E5%88%97%E5%90%8D">获取pikachu数据库中users数据表的列名</a>  </li>
+<li><a href="#%E8%8E%B7%E5%8F%96pikachu%E4%B8%ADusers%E8%A1%A8%E4%B8%AD%E7%9A%84%E6%95%B0%E6%8D%AE">获取pikachu中users表中的数据</a>  </li>
+<li><a href="#%E9%AB%98%E6%9D%83%E9%99%90%E6%B3%A8%E5%85%A5%E6%96%87%E4%BB%B6%E8%AF%BB%E5%86%99">高权限注入文件读写</a>  </li>
+<li><a href="#%E6%96%87%E4%BB%B6%E5%86%99%E5%85%A5%E6%93%8D%E4%BD%9C">文件写入操作</a>  </li>
+<li><a href="#%E6%96%87%E4%BB%B6%E8%AF%BB%E5%8F%96%E6%93%8D%E4%BD%9C">文件读取操作</a> </li>
+<li><a href="#%E5%B8%B8%E8%A7%81%E5%86%99%E5%85%A5%E9%97%AE%E9%A2%98">常见写入问题</a></li>
+</ul>
+</li>
+<li><a href="#SQL%E6%B3%A8%E5%85%A5%E4%B9%8B%E7%B1%BB%E5%9E%8B%E5%8F%8A%E6%8F%90%E4%BA%A4%E6%B3%A8%E5%85%A5">SQL注入之类型及提交注入</a>  <ul>
+<li><a href="#SQL%E6%B3%A8%E5%85%A5%E7%82%B9%E7%B1%BB%E5%9E%8B%E5%88%86%E7%B1%BB">SQL注入点类型分类</a>  <ul>
+<li><a href="#%E6%95%B0%E5%AD%97%E5%9E%8B">数字型</a>   </li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E5%9E%8B">字符型</a> </li>
+<li><a href="#%E6%90%9C%E7%B4%A2%E5%9E%8B">搜索型</a> </li>
+<li><a href="#JSON%E5%9E%8B">JSON型</a></li>
+</ul>
+</li>
+<li><a href="#SQL%E6%8F%90%E4%BA%A4%E6%96%B9%E5%BC%8F%E5%88%86%E7%B1%BB">SQL提交方式分类</a> <ul>
+<li><a href="#GET">GET</a> </li>
+<li><a href="#POST">POST</a>   </li>
+<li><a href="#REQUEST">REQUEST</a>  </li>
+<li><a href="#HTTP%E5%A4%B4%E6%B3%A8%E5%85%A5">HTTP头注入</a></li>
+</ul>
+</li>
+<li><a href="#%E5%AD%97%E7%AC%A6%E5%9E%8B%E6%B3%A8%E5%85%A5%E6%B5%8B%E8%AF%95">字符型注入测试</a> </li>
+<li><a href="#Oracle,MongoDB%E7%AD%89%E6%B3%A8%E5%85%A5">Oracle,MongoDB等注入</a>  <ul>
+<li><a href="#%E6%95%B0%E6%8D%AE%E5%BA%93%E5%88%86%E7%B1%BB">数据库分类</a>  </li>
+<li><a href="#ACCESS%E6%B3%A8%E5%85%A5">ACCESS注入</a>  </li>
+<li><a href="#MSSQL%E6%B3%A8%E5%85%A5">MSSQL注入</a></li>
+<li><a href="#postgresql%E6%B3%A8%E5%85%A5">postgresql注入</a>  </li>
+<li><a href="#oracle%E6%B3%A8%E5%85%A5">oracle注入</a>  </li>
+<li><a href="#mangoDB%E6%B3%A8%E5%85%A5">mangoDB注入</a></li>
+</ul>
+</li>
+<li><a href="#SQLMAP%E7%9A%84%E4%BD%BF%E7%94%A8%E6%96%B9%E6%B3%95">SQLMAP的使用方法</a>  </li>
+<li><a href="#%E6%9F%A5%E8%AF%A2%E6%96%B9%E5%BC%8F%E5%8F%8A%E6%8A%A5%E9%94%99%E7%9B%B2%E6%B3%A8">查询方式及报错盲注</a>  <ul>
+<li><a href="#%E5%B8%B8%E8%A7%81%E6%9F%A5%E8%AF%A2%E6%96%B9%E5%BC%8F">常见查询方式</a>  </li>
+<li><a href="#%E6%8A%A5%E9%94%99%E6%B3%A8%E5%85%A5">报错注入</a></li>
+</ul>
+</li>
+<li><a href="#%E7%9B%B2%E6%B3%A8">盲注</a>  <ul>
+<li><a href="#%E5%B8%83%E5%B0%94%E7%9B%B2%E6%B3%A8">布尔盲注</a>  </li>
+<li><a href="#%E6%97%B6%E9%97%B4%E7%9B%B2%E6%B3%A8">时间盲注</a><!-- TOC END --></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h1 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h1><h2 id="SQL注入介绍"><a href="#SQL注入介绍" class="headerlink" title="SQL注入介绍"></a>SQL注入介绍</h2><p>SQL 注入（SQL Injection）是发生在 Web 程序中数据库层的安全漏洞，是网站存在最多也是最简单的漏洞。主要原因是程序对用户输入数据的合法性没有判断和处理，导致攻击者可以在 Web 应用程序中事先定义好的 SQL 语句中添加额外的 SQL 语句，在管理员不知情的情况下实现非法操作，以此来实现欺骗数据库服务器执行非授权的任意查询，从而进一步获取到数据信息。</p>
 <h2 id="SQL注入原理"><a href="#SQL注入原理" class="headerlink" title="SQL注入原理"></a>SQL注入原理</h2><p>SQL注入本质上来讲就是拼接字符串，通过输入额外的信息破坏外后端脚本原有的查询语句结构，从而达成注入的目的。</p>
 <p><strong>以下列代码和输入为例：</strong><br>如果GET传参</p>
 <pre><code>php  
@@ -324,7 +389,6 @@ $id=$_GET[&#39;id&#39;];
 $sql=&quot;SELECT * FROM users WHERE id=&#39;$id&#39; LIMIT 0,1&quot;;
 $result=mysql_query($sql);  
 </code></pre>
-<h3 id="高权限注入跨库查询-1"><a href="#高权限注入跨库查询-1" class="headerlink" title="高权限注入跨库查询"></a>高权限注入跨库查询</h3><p><strong>以下查询都以sqli-labs第一关为例，下方为页面关键源码</strong></p>
 <h4 id="跨站查询的思路"><a href="#跨站查询的思路" class="headerlink" title="跨站查询的思路"></a>跨站查询的思路</h4><p>通过information_schema表特性，记录库名，表名，列名对应表</p>
 <ol>
 <li><p>information_schema.schemata：记录所有数据库名的表</p>
