@@ -179,7 +179,143 @@
     </div>
     
     <div class="content" v-pre>
-        <h2 id="java反序列化漏洞"><a href="#java反序列化漏洞" class="headerlink" title=" java反序列化漏洞"></a><span id="more"></span> <font color=#00ffff>java反序列化漏洞</font></h2><p><font color=#00ffff></font></p>
+        <h2 id="java反序列化漏洞"><a href="#java反序列化漏洞" class="headerlink" title=" java反序列化漏洞"></a><span id="more"></span> <font color=#00ffff>java反序列化漏洞</font></h2><h3 id="序列化漏洞概述"><a href="#序列化漏洞概述" class="headerlink" title="序列化漏洞概述"></a><font color=#00ffff size=5>序列化漏洞概述</font></h3><p>序列化的存在主要是为了存储和传输，将这些在程序内存中的对象转换成数据字节流。由对象转换得到字节流的过程就称作是序列化。反序列化就是由字节流转换得到对象的过程。<br></p>
+<p>反序列化漏洞就是指当目标程序对攻击者可控的数据进行反序列化处理时产生的安全问题。<br>  </p>
+<p>在各种编程语言的反序列化漏洞中，Java是最引人瞩目的，因为Java的开发生态中各种第三方库组件相互依赖，经常出现开发中常用的基础底层组件出现安全问题时，会引发核弹式反应，进而影响到上层得操作系统。<br><br><br><font color=#00ffff size=5>序列化漏洞基础知识</font>  <br>在Java中，如果想要对一个对象实现序列化，反序列化，那么这个对象的类必须要实现java.io.Serializable接口。序列化的实现由两种方法：</p>
+<p>使用java.io.ObjectOutputStream类的方法</p>
+<p>通过writeObject方法实现对象序列化</p>
+<pre><code>FileOutputStream f = new FileOutputStream(&quot;date.ser&quot;);
+ObjectOutput s = new ObjectOutputStream(f);
+s.writeObject(new Date());
+s.flush();  
+</code></pre>
+<p>通过readObject方法实现字节流反序列化      </p>
+<pre><code>FileInputStream in = new FileInputStream(&quot;date.ser&quot;);  
+ObjectInputStream s = new ObjectInputStream(in);  
+Date date = (Date)s.readObject();   
+</code></pre>
+<h3 id="Java序列化基础知识"><a href="#Java序列化基础知识" class="headerlink" title="Java序列化基础知识"></a><font color=#00ffff size=5>Java序列化基础知识</font></h3><p>在Java中，如果想要对一个对象实现序列化，反序列化，那么这个对象的类必须要实现java.io.Serializable接口。序列化的实现由两种方法： </p>
+<p><strong>类实现Serializable接口</strong><br>类实现接口会重写两个方法，writeObject和readObject。<br>Person类：  </p>
+<pre><code>package lemo;
+import java.io.Serializable;
+​
+public class Person implements Serializable &#123;
+​
+    private String name;
+    private int age;
+​
+    public Person()&#123;
+​
+    &#125;
+    // 构造函数
+    public Person(String name, int age)&#123;
+        this.name = name;
+        this.age = age;
+    &#125;
+​
+    @Override
+    public String toString()&#123;
+        return &quot;src.Person&#123;&quot; +
+                &quot;name=&#39;&quot; + name + &#39;\&#39;&#39; +
+                &quot;, age=&quot; + age +
+                &#39;&#125;&#39;;
+    &#125;
+&#125;  
+</code></pre>
+<p>序列化文件：SerializationTest.java  </p>
+<pre><code>package lemo;
+ 
+import java.io.FileOutputStream;//文件输出流
+import java.io.IOException;//用于声明可能会抛出IOException的方法。当一个方法可能会引发输入/输出异常时，可以使用throws IOException来通知调用该方法的其他部分，让它们做出相应的异常处理。
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;//将对象以二进制形式写入输出流。它可以将对象序列化成字节流，用于在网络中传输或保存到文件中。
+ 
+public class SerializationTest &#123;
+    public static void serialize(Object obj) throws IOException&#123;
+        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));//输出流对象
+        oos.writeObject(obj);//序列化
+    &#125;
+ 
+    public static void main(String[] args) throws Exception&#123;
+        Person person = new Person(&quot;aa&quot;,22);
+        System.out.println(person);
+        serialize(person);
+    &#125;
+&#125;  
+</code></pre>
+<p>反序列化文件：UnserializeTest.java  </p>
+<pre><code>package lemo;
+ 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+ 
+public class UnserializeTest &#123;
+    public static Object unserialize(String Filename) throws IOException, ClassNotFoundException&#123;
+        ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Filename));
+        Object obj = ois.readObject();
+        return obj;
+    &#125;
+ 
+    public static void main(String[] args) throws Exception&#123;
+        Person person = (Person)unserialize(&quot;ser.bin&quot;);
+        System.out.println(person);//反序列化
+    &#125;
+&#125;  
+</code></pre>
+<p>我们运行<strong>SerializationTest.java</strong>得到<br><img src="https://img2023.cnblogs.com/blog/2443617/202308/2443617-20230824155707985-547816843.png">  </p>
+<pre><code>        ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(&quot;ser.bin&quot;));//输出流对象
+        oos.writeObject(obj);//序列化   
+</code></pre>
+<pre><code>    在 serialize 方法的实现中，首先创建了一个 ObjectOutputStream 对象 oos，它接受一个 FileOutputStream 对象作为参数，用于指定输出流写入的文件名为 &quot;ser.bin&quot;。然后，通过调用 oos.writeObject(obj) 方法，将传入的对象进行序列化，将序列化后的数据写入输出流。
+</code></pre>
+<p> 我们运行<strong>UnserializationTest.java</strong>得到<br> <img src="https://img2023.cnblogs.com/blog/2443617/202308/2443617-20230824155716200-1979294939.png">  </p>
+<pre><code>ObjectInputStream ois = new ObjectInputStream(new FileInputStream(Filename));
+       Object obj = ois.readObject();  
+</code></pre>
+<p>readObject()方法被调用，它从输入流中读取字节并将其反序列化为对象  </p>
+<h3 id="序列化漏洞产生的原因"><a href="#序列化漏洞产生的原因" class="headerlink" title="序列化漏洞产生的原因"></a><font color=#00ffff size=5>序列化漏洞产生的原因</font></h3><p>我们总结一下产生该漏洞需要哪些条件：<br>1.支持序列化<br>2.重写readObject<br>3.在重写readObject中调用了常见的类的函数方法<br>4.可以接受很多类型的参数（目标类的类型），可控。<br>比如说hashmap函数这个漏洞产生是调用hashmap方法，这个方法可以使我们能够执行漏洞执行代码——rce<br><br><br>产生漏洞的原因有哪些呢：<br>这里unserialize中的readObject是关键：<br>    我们简单了解了序列化与反序列化的过程。那么为什么会产生漏洞呢？<br>    举个例子：我们可以试想一下，客户端传递一个类-&gt;给服务端。<br>    服务端需要反序列化我们传送的数据，那么就需要调用readObject。<br>    而用户可以在自己传递的类中重写 readObject，也就给予攻击者在服务器上运行代码的能力。<br>让我们把刚刚的代码稍微修改一下  </p>
+<pre><code>import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.Serializable;
+ 
+public class Person implements Serializable &#123;
+    private int age;
+    public String name;
+    public static int id;
+ 
+    public Person()&#123;
+    &#125;
+ 
+    public Person(int age, String name)&#123;
+        this.age = age;
+        this.name = name;
+    &#125;
+ 
+    @Override
+    public String toString() &#123;
+        return &quot;Person&#123;&quot;+
+                &quot;name=&#39;&quot; + name +&#39;\&#39;&#39; +
+                &quot;,age=&quot; + age +
+                &#39;&#125;&#39;;
+    &#125;
+ 
+    private void readObject(ObjectInputStream ois) throws IOException, ClassNotFoundException &#123;
+        ois.defaultReadObject();
+        Runtime.getRuntime().exec(&quot;calc&quot;);
+   &#125;
+ 
+&#125;  
+</code></pre>
+<p>可以发现，我们的readObject首先 ois.defaultReadObject(); 也就是让反序列化读取的时候按照默认的方法执行。但是我们添加了一行Runtime.getRuntime().exec(“calc”); 也就是windows 操作系统打开计算器的命令。服务器反序列化的时候就会打开它的计算器。  </p>
+<h3 id="序列化漏洞检测思路"><a href="#序列化漏洞检测思路" class="headerlink" title="序列化漏洞检测思路"></a><font color=#00ffff size=5>序列化漏洞检测思路</font></h3><p>数据包内出现字符串：0xaced 00 05(二进制数据的16进制数据表示) 或者 rO0AB(二进制数据的Base64编码)  </p>
+<h3 id="序列化漏洞利用"><a href="#序列化漏洞利用" class="headerlink" title="序列化漏洞利用"></a><font color=#00ffff size=5>序列化漏洞利用</font></h3><p>在现实世界的反序列化的利用往往时复杂的，往往需要多个组合多个不同的Serializable接口实现类的方阿飞调用，形成复杂的利用链<br>对于实际测试时，推荐一个GITHUB项目：<br><a href="https://link.csdn.net/?from_id=130842975&target=https://github.com/frohoff/ysoserial">GitHub - frohoff&#x2F;ysoserial: A proof-of-concept tool for generating payloads that exploit unsafe Java object deserialization</a><br>运行下面这条命令可以查看这个工具支持的利用链类型：  </p>
+<pre><code>java -jar ysoserial-all.jar  
+</code></pre>
+<p>payload生成命令：  </p>
+<pre><code>java -jar ysoserial-all.jar payload 命令  
+</code></pre>
+<p>需要注意的是工具集成的paylaod需要依赖的组件，当我们测试时发现它有依赖这些组件，就可以进行测试反序列化漏洞。  </p>
 
     </div>
     
