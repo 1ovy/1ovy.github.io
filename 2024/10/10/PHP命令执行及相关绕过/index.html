@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Lovy</title>
+    <title>PHP命令执行及相关绕过 | Lovy</title>
     <meta name="author" content="Lovy" />
     <meta name="description" content="come on" />
     <meta name="keywords" content="" />
@@ -42,7 +42,9 @@
 
 
 
-<script src="/js/lib/home.js"></script>
+
+
+
 
 <link rel="stylesheet" href="/css/main.css" />
 
@@ -161,40 +163,11 @@
 </transition>
 
         <div id="main" :class="loading ? 'into-enter-from': 'into-enter-active'">
-            <div id="home-head">
-    <div
-        id="home-background"
-        ref="homeBackground"
-        data-images="/images/background.jpg"
-    ></div>
-    <div id="home-info" @click="homeClick">
-        <span class="loop"></span>
-        <span class="loop"></span>
-        <span class="loop"></span>
-        <span class="loop"></span>
-        <span class="info">
-            <div class="wrap">
-                <h1>Lovy</h1>
-                <h3>须知少年凌云志，曾许人间第一流</h3>
-                <h5>come on</h5>
-            </div>
-        </span>
+            <div class="article">
+    <div>
+        <h1>PHP命令执行及相关绕过</h1>
     </div>
-</div>
-<div
-    id="home-posts-wrap"
-    ref="homePostsWrap"
-    true
->
-    <div id="home-posts">
-        
-
-<div class="post">
-    <a href="/2024/10/10/PHP%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%BB%95%E8%BF%87/">
-        <h2 class="post-title">PHP命令执行及相关绕过</h2>
-    </a>
-    <div class="category-and-date">
-        
+    <div class="info">
         <span class="date">
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
@@ -204,10 +177,9 @@
         
         
     </div>
-    <div class="description">
-        <div class="content" v-pre>
-            
-            <h2 id="PHP命令执行及相关绕过"><a href="#PHP命令执行及相关绕过" class="headerlink" title="PHP命令执行及相关绕过"></a><font color=#00ffff size=72>PHP命令执行及相关绕过</font></h2><h3 id="PHP相关题目常见常用的函数总结"><a href="#PHP相关题目常见常用的函数总结" class="headerlink" title="PHP相关题目常见常用的函数总结"></a><font color=#00ffff>PHP相关题目常见常用的函数总结</font></h3><pre><code>  escapeshellarg() 将给字符串增加一个单引号并且能引用或者转码任何已经存在的单引号，这样以确保能够直接将一个字符串传入 shell 函数，并且还是确保安全的。 
+    
+    <div class="content" v-pre>
+        <h2 id="PHP命令执行及相关绕过"><a href="#PHP命令执行及相关绕过" class="headerlink" title="PHP命令执行及相关绕过"></a><font color=#00ffff size=72>PHP命令执行及相关绕过</font></h2><h3 id="PHP相关题目常见常用的函数总结"><a href="#PHP相关题目常见常用的函数总结" class="headerlink" title="PHP相关题目常见常用的函数总结"></a><font color=#00ffff>PHP相关题目常见常用的函数总结</font></h3><pre><code>  escapeshellarg() 将给字符串增加一个单引号并且能引用或者转码任何已经存在的单引号，这样以确保能够直接将一个字符串传入 shell 函数，并且还是确保安全的。 
   
   当escapeshellarg()无法转码时，会选择过滤掉改字符那么我们直接我们可以用%81 去绕过，因为%81 为不可见字符 
 </code></pre>
@@ -545,174 +517,13 @@ catch (PDOException $e) &#123;
 exit(0);  
 </code></pre>
 
-            
-        </div>
     </div>
-    <div class="post-tags">
-        
-        
-        
-    </div>
-    <a href="/2024/10/10/PHP%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%BB%95%E8%BF%87/" class="go-post">阅读全文</a>
-</div>
-
-<div class="post">
-    <a href="/2024/09/21/Just-for-test/">
-        <h2 class="post-title">Python反序列化：pickle原理&amp;rce</h2>
-    </a>
-    <div class="category-and-date">
-        
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
-            </span>
-            2024/9/21
-        </span>
-        
-        
-    </div>
-    <div class="description">
-        <div class="content" v-pre>
-            
-            <h2 id="pickle反序列化漏洞"><a href="#pickle反序列化漏洞" class="headerlink" title=" pickle反序列化漏洞"></a>
-            
-        </div>
-    </div>
-    <div class="post-tags">
-        
-        
-        
-    </div>
-    <a href="/2024/09/21/Just-for-test/" class="go-post">阅读全文</a>
-</div>
-
-<div class="post">
-    <a href="/2024/09/20/hello-world/">
-        <h2 class="post-title">Hello World</h2>
-    </a>
-    <div class="category-and-date">
-        
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
-            </span>
-            2024/9/20
-        </span>
-        
-        
-    </div>
-    <div class="description">
-        <div class="content" v-pre>
-            
-            <h2 id=""><a href="#" class="headerlink" title=""></a>
-            
-        </div>
-    </div>
-    <div class="post-tags">
-        
-        
-        
-    </div>
-    <a href="/2024/09/20/hello-world/" class="go-post">阅读全文</a>
-</div>
-
-<div class="post">
-    <a href="/2024/08/29/test/">
-        <h2 class="post-title">java反序列化</h2>
-    </a>
-    <div class="category-and-date">
-        
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
-            </span>
-            2024/8/29
-        </span>
-        
-        
-    </div>
-    <div class="description">
-        <div class="content" v-pre>
-            
-            <h2 id="java反序列化漏洞"><a href="#java反序列化漏洞" class="headerlink" title=" java反序列化漏洞"></a>
-            
-        </div>
-    </div>
-    <div class="post-tags">
-        
-        
-        
-    </div>
-    <a href="/2024/08/29/test/" class="go-post">阅读全文</a>
-</div>
-
-<div class="post">
-    <a href="/2024/07/21/SQL%E6%B3%A8%E5%85%A5/">
-        <h2 class="post-title">SQL注入全集</h2>
-    </a>
-    <div class="category-and-date">
-        
-        <span class="date">
-            <span class="icon">
-                <i class="fa-solid fa-calendar fa-fw"></i>
-            </span>
-            2024/7/21
-        </span>
-        
-        
-    </div>
-    <div class="description">
-        <div class="content" v-pre>
-            
-            <h2 id=""><a href="#" class="headerlink" title=""></a>
-            
-        </div>
-    </div>
-    <div class="post-tags">
-        
-        
-        
-    </div>
-    <a href="/2024/07/21/SQL%E6%B3%A8%E5%85%A5/" class="go-post">阅读全文</a>
-</div>
-
-
-        <div class="page-current">
     
-    <span class="current">1</span>
     
     
     
     
-</div>
-
-    </div>
     
-    <div id="home-card">
-        <div id="card-style">
-    <div id="card-div">
-        <div class="avatar">
-            <img src="/images/avatar.jpg" alt="avatar" />
-        </div>
-        <div class="name">Lovy</div>
-        <div class="description">
-            <p>仰天大笑出门去，我辈岂是蓬蒿人<br>…</p>
-
-        </div>
-        
-        
-        <div class="friend-links">
-            
-            <div class="friend-link">
-                <a target="_blank" rel="noopener" href="https://1ovy.github.io">lovy</a>
-            </div>
-            
-        </div>
-        
-    </div>
-</div>
-
-    </div>
     
 </div>
 
@@ -744,6 +555,12 @@ exit(0);
         
     </div>
     <script src="/js/main.js"></script>
+    
+    
+
+
+
+
     
 </body>
 </html>
