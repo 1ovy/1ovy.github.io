@@ -172,14 +172,18 @@
             <span class="icon">
                 <i class="fa-solid fa-calendar fa-fw"></i>
             </span>
-            2024/10/10
+            2024/9/10
         </span>
         
         
     </div>
     
     <div class="content" v-pre>
-        <h2 id="PHP命令执行及相关绕过"><a href="#PHP命令执行及相关绕过" class="headerlink" title="PHP命令执行及相关绕过"></a><font color=#00ffff size=72>PHP命令执行及相关绕过</font></h2><h3 id="PHP相关题目常见常用的函数总结"><a href="#PHP相关题目常见常用的函数总结" class="headerlink" title="PHP相关题目常见常用的函数总结"></a><font color=#00ffff>PHP相关题目常见常用的函数总结</font></h3><pre><code>  escapeshellarg() 将给字符串增加一个单引号并且能引用或者转码任何已经存在的单引号，这样以确保能够直接将一个字符串传入 shell 函数，并且还是确保安全的。 
+        <h2 id=""><a href="#" class="headerlink" title=""></a><span id="more"></span></h2><ul>
+<li><a href="#php%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C%E5%8F%8A%E7%9B%B8%E5%85%B3%E7%BB%95%E8%BF%87">PHP命令执行及相关绕过</a></li>
+</ul>
+<hr>
+<h2 id="PHP命令执行及相关绕过"><a href="#PHP命令执行及相关绕过" class="headerlink" title="PHP命令执行及相关绕过"></a><font color=#00ffff size=72>PHP命令执行及相关绕过</font></h2><h3 id="PHP相关题目常见常用的函数总结"><a href="#PHP相关题目常见常用的函数总结" class="headerlink" title="PHP相关题目常见常用的函数总结"></a><font color=#00ffff>PHP相关题目常见常用的函数总结</font></h3><pre><code>  escapeshellarg() 将给字符串增加一个单引号并且能引用或者转码任何已经存在的单引号，这样以确保能够直接将一个字符串传入 shell 函数，并且还是确保安全的。 
   
   当escapeshellarg()无法转码时，会选择过滤掉改字符那么我们直接我们可以用%81 去绕过，因为%81 为不可见字符 
 </code></pre>
